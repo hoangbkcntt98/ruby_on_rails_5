@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+    has_many :microposts, dependent: :destroy
+
      attr_accessor :remember_token, :activation_token, :reset_token
 
   before_save   :downcase_email
@@ -42,7 +44,7 @@ class User < ApplicationRecord
   end
   # Activates an account.
   def activate
-    update_columns(activated: FILL_IN, activated_at: FILL_IN)
+    update_columns(activated: true, activated_at: Time.zone.now)
   end
 
   # Sends activation email.
@@ -60,7 +62,11 @@ class User < ApplicationRecord
   def send_password_reset_email
     UserMailer.password_reset(self).deliver_now
   end
-
+  # Defines a proto-feed.
+  # See "Following users" for the full implementation.
+  def feed
+    Micropost.where("user_id = ?", id)
+  end
 
   private
 

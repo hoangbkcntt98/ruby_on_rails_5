@@ -6,13 +6,12 @@ class UsersController < ApplicationController
   include UsersHelper
   include SessionsHelper
     def index
-    @users = User.where(activated: true).paginate(page: params[:page])
+    @users = User.where(activated: FILL_IN).paginate(page: params[:page])
   end
 
   def show
     @user = User.find(params[:id])
-    @microposts = @user.microposts.paginate(page: params[:page])
-    redirect_to root_url
+    redirect_to root_url and return unless FILL_IN
   end
 
   def new
